@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox fx:controller="cl.duoc.viviendas.controller.RegistroController" prefHeight="480.0" prefWidth="440.0" spacing="15.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+    </padding>
+    <children>
+        <Label text="Registro de Nueva Vivienda" textFill="#2c3e50">
+            <font>
+                <Font name="System Bold" size="18.0"/>
+            </font>
+        </Label>
+        <GridPane hgap="10.0" vgap="10.0">
+            <children>
+                <Label GridPane.columnIndex="0" GridPane.rowIndex="0" text="Tipo de Vivienda:"/>
+                <ComboBox GridPane.columnIndex="1" GridPane.rowIndex="0" fx:id="cmbTipo" prefWidth="220.0"/>
+
+                <Label GridPane.columnIndex="0" GridPane.rowIndex="1" text="Código Propiedad:"/>
+                <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" fx:id="txtCodigo" promptText="Ej: VIV-001"/>
+
+                <Label GridPane.columnIndex="0" GridPane.rowIndex="2" text="Superficie (m²):"/>
+                <TextField GridPane.columnIndex="1" GridPane.rowIndex="2" fx:id="txtSuperficie" promptText="Ej: 75 (entre 20 y 500)"/>
+
+                <Label GridPane.columnIndex="0" GridPane.rowIndex="3" text="Habitaciones:"/>
+                <TextField GridPane.columnIndex="1" GridPane.rowIndex="3" fx:id="txtHabitaciones" promptText="Ej: 3"/>
+
+                <Label GridPane.columnIndex="0" GridPane.rowIndex="4" fx:id="lblPatio" text="Patio:"/>
+                <CheckBox GridPane.columnIndex="1" GridPane.rowIndex="4" fx:id="chkPatio" text="¿Cuenta con patio?"/>
+
+                <Label GridPane.columnIndex="0" GridPane.rowIndex="5" fx:id="lblPiso" text="Número de Piso:"/>
+                <TextField GridPane.columnIndex="1" GridPane.rowIndex="5" fx:id="txtPiso" promptText="Ej: 4"/>
+
+                <Label GridPane.columnIndex="0" GridPane.rowIndex="6" fx:id="lblGastoComun" text="Gastos Comunes:"/>
+                <CheckBox GridPane.columnIndex="1" GridPane.rowIndex="6" fx:id="chkGastoComun" text="¿Gasto común al día?"/>
+            </children>
+        </GridPane>
+        <Label fx:id="lblError" text="" textFill="#e74c3c" wrapText="true"/>
+        <HBox alignment="CENTER_RIGHT" spacing="10.0">
+            <children>
+                <Button fx:id="btnCancelar" onAction="#handleCancelar" text="Cancelar"/>
+                <Button fx:id="btnGuardar" onAction="#handleGuardar" style="-fx-background-color: #27ae60; -fx-text-fill: white;" text="Guardar"/>
+            </children>
+        </HBox>
+    </children>
+</VBox>

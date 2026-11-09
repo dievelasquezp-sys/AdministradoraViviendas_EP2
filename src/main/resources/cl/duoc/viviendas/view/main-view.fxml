@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox fx:controller="cl.duoc.viviendas.controller.MainController" prefHeight="500.0" prefWidth="800.0" spacing="10.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+    <padding>
+        <Insets bottom="15.0" left="15.0" right="15.0" top="15.0"/>
+    </padding>
+    <children>
+        <Label text="Administración de Viviendas" textFill="#2c3e50">
+            <font>
+                <Font name="System Bold" size="20.0"/>
+            </font>
+        </Label>
+        <HBox alignment="CENTER_LEFT" spacing="10.0">
+            <children>
+                <Label text="Buscar:"/>
+                <TextField HBox.hgrow="ALWAYS" fx:id="txtBuscar" promptText="Código o tipo..."/>
+                <Button fx:id="btnNuevo" onAction="#handleNuevo" text="Nueva Vivienda"/>
+                <Button fx:id="btnEliminar" onAction="#handleEliminar" style="-fx-background-color: #e74c3c; -fx-text-fill: white;" text="Eliminar"/>
+            </children>
+        </HBox>
+        <TableView VBox.vgrow="ALWAYS" fx:id="tblViviendas">
+            <columns>
+                <TableColumn fx:id="colCodigo" prefWidth="110.0" text="Código"/>
+                <TableColumn fx:id="colTipo" prefWidth="120.0" text="Tipo"/>
+                <TableColumn fx:id="colSuperficie" prefWidth="120.0" text="Superficie (m²)"/>
+                <TableColumn fx:id="colHabitaciones" prefWidth="110.0" text="Habitaciones"/>
+                <TableColumn fx:id="colDetalle" prefWidth="130.0" text="Caracteristicas"/>
+                <TableColumn fx:id="colCosto" prefWidth="140.0" text="Costo Arriendo ($)"/>
+            </columns>
+        </TableView>
+        <Label fx:id="lblMensaje" text="" textFill="#27ae60">
+            <font>
+                <Font size="13.0"/>
+            </font>
+        </Label>
+    </children>
+</VBox>
