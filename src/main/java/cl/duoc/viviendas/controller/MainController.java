@@ -2,6 +2,8 @@ package cl.duoc.viviendas.controller;
 
 import cl.duoc.viviendas.model.Vivienda;
 import cl.duoc.viviendas.repository.ViviendaRepository;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
@@ -10,6 +12,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -28,10 +31,17 @@ public class MainController {
     @FXML private Label lblMensaje;
 
     private ViviendaRepository repository;
+    private final ObservableList<Vivienda> viviendas = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
         repository = new ViviendaRepository();
+        try {
+            repository.cargar();
+            viviendas.setAll(repository.listar());
+        } catch (IOException e) {
+            mostrarMensaje("Error al leer los archivos: " + e.getMessage(), true);
+        }
 
         colCodigo.setCellValueFactory(new PropertyValueFactory<>("codigo"));
         colTipo.setCellValueFactory(new PropertyValueFactory<>("tipo"));
@@ -40,7 +50,7 @@ public class MainController {
         colDetalle.setCellValueFactory(new PropertyValueFactory<>("detalle"));
         colCosto.setCellValueFactory(new PropertyValueFactory<>("costoArriendo"));
 
-        FilteredList<Vivienda> filteredData = new FilteredList<>(repository.getViviendas(), p -> true);
+        FilteredList<Vivienda> filteredData = new FilteredList<>(viviendas, p -> true);
 
         txtBuscar.textProperty().addListener((observable, oldValue, newValue) -> {
             filteredData.setPredicate(vivienda -> {
@@ -74,9 +84,16 @@ public class MainController {
             stage.setResizable(false);
             stage.showAndWait();
 
-            lblMensaje.setText("Operación realizada en la lista.");
+            viviendas.setAll(repository.listar());
+
+            Vivienda nueva = registroController.getViviendaRegistrada();
+            if (nueva != null) {
+                mostrarMensaje(nueva.getCodigo() + " (" + nueva.getTipo() + ") registrada correctamente.", false);
+            } else {
+                mostrarMensaje("Registro cancelado.", false);
+            }
         } catch (IOException e) {
-            lblMensaje.setText("Error al abrir ventana de registro.");
+            mostrarMensaje("Error al abrir la ventana de registro.", true);
         }
     }
 
@@ -84,15 +101,23 @@ public class MainController {
     private void handleEliminar() {
         Vivienda seleccionada = tblViviendas.getSelectionModel().getSelectedItem();
         if (seleccionada == null) {
-            lblMensaje.setText("Seleccione una vivienda para eliminar.");
+            mostrarMensaje("Seleccione una vivienda para eliminar.", true);
             return;
         }
 
-        boolean borrado = repository.eliminar(seleccionada);
-        if (borrado) {
-            lblMensaje.setText("Vivienda Código '" + seleccionada.getCodigo() + "' eliminada.");
-        } else {
-            lblMensaje.setText("No se pudo eliminar la vivienda.");
+        try {
+            repository.eliminar(seleccionada);
+            mostrarMensaje("Vivienda '" + seleccionada.getCodigo() + "' eliminada correctamente.", false);
+        } catch (IOException e) {
+            mostrarMensaje("No se pudo guardar la eliminación: " + e.getMessage(), true);
+        } catch (IllegalArgumentException e) {
+            mostrarMensaje(e.getMessage(), true);
         }
+        viviendas.setAll(repository.listar());
+    }
+
+    private void mostrarMensaje(String texto, boolean error) {
+        lblMensaje.setTextFill(Color.web(error ? "#e74c3c" : "#27ae60"));
+        lblMensaje.setText(texto);
     }
 }

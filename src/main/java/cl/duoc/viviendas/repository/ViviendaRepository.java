@@ -3,37 +3,52 @@ package cl.duoc.viviendas.repository;
 import cl.duoc.viviendas.dao.ViviendaDAO;
 import cl.duoc.viviendas.dao.ViviendaDAOImpl;
 import cl.duoc.viviendas.model.Vivienda;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ViviendaRepository {
-    private final ViviendaDAO viviendaDAO;
-    private final ObservableList<Vivienda> viviendas;
 
-    public ViviendaRepository() {
-        this.viviendaDAO = new ViviendaDAOImpl();
-        this.viviendas = FXCollections.observableArrayList(viviendaDAO.cargarViviendas());
+    private final ViviendaDAO viviendaDAO = new ViviendaDAOImpl();
+    private final List<Vivienda> viviendas = new ArrayList<>();
+
+    public void cargar() throws IOException {
+        viviendas.clear();
+        viviendas.addAll(viviendaDAO.cargarViviendas());
     }
 
-    public ObservableList<Vivienda> getViviendas() {
-        return viviendas;
+    public List<Vivienda> listar() {
+        return List.copyOf(viviendas);
     }
 
-    public boolean agregar(Vivienda vivienda) {
+    public void agregar(Vivienda vivienda) throws IOException {
         for (Vivienda v : viviendas) {
             if (v.getCodigo().equalsIgnoreCase(vivienda.getCodigo())) {
-                return false;
+                throw new IllegalArgumentException(
+                        "Ya existe una vivienda con el código '" + vivienda.getCodigo() + "'.");
             }
         }
         viviendas.add(vivienda);
-        return viviendaDAO.guardarViviendas(viviendas);
+        try {
+            viviendaDAO.guardarViviendas(viviendas);
+        } catch (IOException e) {
+            viviendas.remove(vivienda);   // memoria y archivo siguen iguales
+            throw e;
+        }
     }
 
-    public boolean eliminar(Vivienda vivienda) {
-        boolean eliminado = viviendas.remove(vivienda);
-        if (eliminado) {
-            viviendaDAO.guardarViviendas(viviendas);
+    public void eliminar(Vivienda vivienda) throws IOException {
+        int indice = viviendas.indexOf(vivienda);
+        if (indice < 0) {
+            throw new IllegalArgumentException("La vivienda no está registrada.");
         }
-        return eliminado;
+        viviendas.remove(indice);
+        try {
+            viviendaDAO.guardarViviendas(viviendas);
+        } catch (IOException e) {
+            viviendas.add(indice, vivienda);   // se revierte si falla el guardado
+            throw e;
+        }
     }
 }
