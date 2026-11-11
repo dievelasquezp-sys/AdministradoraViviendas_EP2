@@ -1,1 +1,8 @@
-[]
+[
+  {
+    "tienePatio": false,
+    "codigo": "asd-001",
+    "superficie": 458.0,
+    "habitaciones": 99
+  }
+]
