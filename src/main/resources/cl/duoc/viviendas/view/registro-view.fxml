@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:controller="cl.duoc.viviendas.controller.RegistroController" prefHeight="480.0" prefWidth="440.0" spacing="15.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:controller="cl.duoc.viviendas.controller.RegistroController" prefHeight="530.0" prefWidth="440.0" spacing="15.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
     </padding>
@@ -43,6 +43,9 @@
 
                 <Label GridPane.columnIndex="0" GridPane.rowIndex="6" fx:id="lblGastoComun" text="Gastos Comunes:"/>
                 <CheckBox GridPane.columnIndex="1" GridPane.rowIndex="6" fx:id="chkGastoComun" text="¿Gasto común al día?"/>
+
+                <Label GridPane.columnIndex="0" GridPane.rowIndex="7" fx:id="lblEstacionamiento" text="Estacionamiento:"/>
+                <CheckBox GridPane.columnIndex="1" GridPane.rowIndex="7" fx:id="chkEstacionamiento" text="¿Tiene estacionamiento asignado?"/>
             </children>
         </GridPane>
         <Label fx:id="lblError" text="" textFill="#e74c3c" wrapText="true"/>

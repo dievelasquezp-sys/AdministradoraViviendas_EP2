@@ -1,14 +1,1 @@
-[
-  {
-    "tienePatio": true,
-    "codigo": "efd-001",
-    "superficie": 456.0,
-    "habitaciones": 2
-  },
-  {
-    "tienePatio": false,
-    "codigo": "adc-002",
-    "superficie": 456.0,
-    "habitaciones": 2
-  }
-]
+[]

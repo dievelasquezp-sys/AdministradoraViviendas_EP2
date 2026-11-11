@@ -1,7 +1,9 @@
 package cl.duoc.viviendas.controller;
 
+import cl.duoc.viviendas.model.ConEstacionamiento;
 import cl.duoc.viviendas.model.Vivienda;
 import cl.duoc.viviendas.repository.ViviendaRepository;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -27,6 +29,7 @@ public class MainController {
     @FXML private TableColumn<Vivienda, Double> colSuperficie;
     @FXML private TableColumn<Vivienda, Integer> colHabitaciones;
     @FXML private TableColumn<Vivienda, String> colDetalle;
+    @FXML private TableColumn<Vivienda, String> colEstacionamiento;
     @FXML private TableColumn<Vivienda, Double> colCosto;
     @FXML private Label lblMensaje;
 
@@ -50,6 +53,15 @@ public class MainController {
         colDetalle.setCellValueFactory(new PropertyValueFactory<>("detalle"));
         colCosto.setCellValueFactory(new PropertyValueFactory<>("costoArriendo"));
 
+        colEstacionamiento.setCellValueFactory(celda -> {
+            Vivienda v = celda.getValue();
+            String texto = "—";
+            if (v instanceof ConEstacionamiento ce) {
+                texto = ce.tieneEstacionamientoAsignado() ? "Sí" : "No";
+            }
+            return new SimpleStringProperty(texto);
+        });
+
         FilteredList<Vivienda> filteredData = new FilteredList<>(viviendas, p -> true);
 
         txtBuscar.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -66,6 +78,14 @@ public class MainController {
         SortedList<Vivienda> sortedData = new SortedList<>(filteredData);
         sortedData.comparatorProperty().bind(tblViviendas.comparatorProperty());
         tblViviendas.setItems(sortedData);
+
+        // Orden inicial por el número del código (001, 002, 003...)
+        colCodigo.setComparator((a, b) -> {
+            int cmp = Integer.compare(numeroDeCodigo(a), numeroDeCodigo(b));
+            return cmp != 0 ? cmp : a.compareToIgnoreCase(b);
+        });
+        colCodigo.setSortType(TableColumn.SortType.ASCENDING);
+        tblViviendas.getSortOrder().add(colCodigo);
     }
 
     @FXML
@@ -80,7 +100,7 @@ public class MainController {
             Stage stage = new Stage();
             stage.setTitle("Registrar Nueva Vivienda");
             stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setScene(new Scene(root, 440, 480));
+            stage.setScene(new Scene(root, 440, 530));
             stage.setResizable(false);
             stage.showAndWait();
 
@@ -114,6 +134,22 @@ public class MainController {
             mostrarMensaje(e.getMessage(), true);
         }
         viviendas.setAll(repository.listar());
+    }
+
+    private static int numeroDeCodigo(String codigo) {
+        int fin = codigo.length();
+        int inicio = fin;
+        while (inicio > 0 && Character.isDigit(codigo.charAt(inicio - 1))) {
+            inicio--;
+        }
+        if (inicio == fin) {
+            return Integer.MAX_VALUE;   // códigos sin número van al final
+        }
+        try {
+            return Integer.parseInt(codigo.substring(inicio, fin));
+        } catch (NumberFormatException e) {
+            return Integer.MAX_VALUE;
+        }
     }
 
     private void mostrarMensaje(String texto, boolean error) {

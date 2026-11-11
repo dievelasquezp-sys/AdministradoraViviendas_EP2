@@ -25,6 +25,8 @@ public class RegistroController {
     @FXML private TextField txtPiso;
     @FXML private Label lblGastoComun;
     @FXML private CheckBox chkGastoComun;
+    @FXML private Label lblEstacionamiento;
+    @FXML private CheckBox chkEstacionamiento;
 
     @FXML private Label lblError;
 
@@ -69,6 +71,11 @@ public class RegistroController {
         lblGastoComun.setManaged(!esCasa);
         chkGastoComun.setVisible(!esCasa);
         chkGastoComun.setManaged(!esCasa);
+
+        lblEstacionamiento.setVisible(!esCasa);
+        lblEstacionamiento.setManaged(!esCasa);
+        chkEstacionamiento.setVisible(!esCasa);
+        chkEstacionamiento.setManaged(!esCasa);
     }
 
     @FXML
@@ -130,7 +137,12 @@ public class RegistroController {
                     lblError.setText("Error en Piso: debe ser mayor que cero.");
                     return;
                 }
-                vivienda = new Departamento(codigo, superficie, habitaciones, piso, chkGastoComun.isSelected());
+                Departamento departamento = new Departamento(codigo, superficie, habitaciones, piso,
+                        chkGastoComun.isSelected());
+                if (chkEstacionamiento.isSelected()) {
+                    departamento.asignarEstacionamiento();
+                }
+                vivienda = departamento;
             }
         } catch (IllegalArgumentException e) {
             lblError.setText("Error: " + e.getMessage());
