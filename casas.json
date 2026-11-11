@@ -1,8 +1,14 @@
 [
   {
     "tienePatio": false,
-    "codigo": "asd-001",
-    "superficie": 458.0,
-    "habitaciones": 99
+    "codigo": "PROP-C02",
+    "superficie": 90.0,
+    "habitaciones": 3
+  },
+  {
+    "tienePatio": true,
+    "codigo": "PROP-C01",
+    "superficie": 120.0,
+    "habitaciones": 4
   }
 ]
